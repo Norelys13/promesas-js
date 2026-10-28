@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buscador de Pokémon</title>
+<link rel="stylesheet" href="estilos.css">
+
+</head>
+<body>
+  <main>
+    <h1>Buscador de Pokémon</h1>
+    <form id="formBuscador">
+      <div class="busqueda">
+        <input type="text" id="idbuscado" placeholder="Ejem. pikachu o 25">
+        <button type="submit">Buscar</button>
+      </div>
+ 
+      <p id="mensaje"></p>
+ 
+      <div class="resultado" id="resultado" hidden>
+      <img id="imagen" alt="Imagen" hidden>
+      <div>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre">
+      </div>
+      <div>
+        <label for="tipos">Tipos:</label>
+        <input type="text" id="tipos">
+      </div>
+      <div>
+        <label for="altura">Altura (m):</label>
+        <input type="text" id="altura">
+      </div>
+      <div>
+        <label for="peso">Peso (kg):</label>
+        <input type="text" id="peso">
+      </div>
+      </div>
+    </form>
+  </main>
+ 
+  <script>
+    const formulario = document.getElementById('formBuscador')
+    const idBuscado = document.getElementById('idbuscado')
+    const mensaje = document.getElementById('mensaje')
+    const resultado = document.getElementById('resultado')
+    const imagen = document.getElementById('imagen')
+    const nombre = document.getElementById('nombre')
+    const tipos = document.getElementById('tipos')
+    const altura = document.getElementById('altura')
+    const peso = document.getElementById('peso')
+ 
+    formulario.addEventListener("submit", (event) => {
+      event.preventDefault() 
+      obtenerDatos(idBuscado.value.trim())
+    })
+ 
+    function limpiar() {
+      resultado.hidden = true
+      imagen.hidden = true
+      nombre.value = ''
+      tipos.value = ''
+      altura.value = ''
+      peso.value = ''
+    }
+ 
+    async function obtenerDatos(id) {
+      limpiar()
+      mensaje.textContent = ""
+ 
+      if (id === "") {
+        mensaje.textContent = "Escribe el nombre o el ID de un Pokémon"
+        return
+      }
+ 
+      const urls = [
+        `https://pokeapi.co/api/v2/pokemon/${id.toLowerCase()}`
+      ]
+ 
+      try {
+        let respuesta
+        for (const url of urls) {
+          try { respuesta = await fetch(url); break } catch (e) { console.error(e) }
+        }
+ 
+        if (!respuesta) { throw new Error('Sin conexión con la API') }
+ 
+        if (id === "") {
+            mensaje.textContent = "Ingresa un ID"
+            return
+        }
+        if (!respuesta.ok) { throw new Error('Error de comunicación') }
+ 
+        const datos = await respuesta.json()
+ 
+        imagen.src = datos.sprites.other["official-artwork"].front_default
+        imagen.hidden = false
+        nombre.value = datos.name
+        tipos.value = datos.types.map(t => t.type.name).join(', ')
+        altura.value = datos.height / 10
+        peso.value = datos.weight / 10
+        resultado.hidden = false
+      } catch (e) {
+        console.error(e)
+        mensaje.textContent = 'No se pudo consultar la API. Inténtalo de nuevo.'
+      }
+    }
+  </script>
+</body>
+</html>

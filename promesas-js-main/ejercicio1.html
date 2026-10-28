@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<main>
+  <h1>Buscador de planetas</h1>
+    <form id="formBuscador">
+      <div class="busqueda">
+        <input type="text" id="idbuscado" placeholder="Ejem. 3">
+        <button type="submit">Buscar</button>
+      </div>
+ 
+      <p id="mensaje"></p>
+ 
+      <div class="resultado" id="resultado" hidden>
+      <div>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre">
+      </div>
+      <div>
+        <label for="clima">Clima:</label>
+        <input type="text" id="clima">
+      </div>
+      <div>
+        <label for="terreno">Terreno:</label>
+        <input type="text" id="terreno">
+      </div>
+      <div>
+        <label for="poblacion">Población:</label>
+        <input type="text" id="poblacion">
+      </div>
+      <div>
+        <label for="diametro">Diámetro (km):</label>
+        <input type="text" id="diametro">
+      </div>
+      </div>
+    </form>
+  </main>
+ 
+  <script>
+    const formulario = document.getElementById('formBuscador')
+    const idBuscado = document.getElementById('idbuscado')
+    const mensaje = document.getElementById('mensaje')
+    const resultado = document.getElementById('resultado')
+    const nombre = document.getElementById('nombre')
+    const clima = document.getElementById('clima')
+    const terreno = document.getElementById('terreno')
+    const poblacion = document.getElementById('poblacion')
+    const diametro = document.getElementById('diametro')
+ 
+    formulario.addEventListener("submit", (event) => {
+      event.preventDefault() 
+      obtenerDatos(idBuscado.value.trim())
+    })
+ 
+    function limpiar() {
+      resultado.hidden = true
+      nombre.value = ''
+      clima.value = ''
+      terreno.value = ''
+      poblacion.value = ''
+      diametro.value = ''
+    }
+ 
+    async function obtenerDatos(id) {
+      limpiar()
+      mensaje.textContent = ""
+ 
+      const urls = [
+        `https://swapi.dev/api/planets/${id}/`,
+        `https://swapi.py4e.com/api/planets/${id}/`
+      ]
+ 
+      try {
+        let respuesta
+        for (const url of urls) {
+          try { respuesta = await fetch(url); break } catch (e) { console.error(e) }
+        }
+ 
+        if (!respuesta) { throw new Error('Sin conexión con la API') }
+
+        if (id === "") {
+          mensaje.textContent = "Ingresa un ID"
+          return
+        }
+        if (!respuesta.ok) { throw new Error('Error de comunicación') }
+ 
+        const datos = await respuesta.json()
+ 
+        nombre.value = datos.name
+        clima.value = datos.climate
+        terreno.value = datos.terrain
+        poblacion.value = datos.population
+        diametro.value = datos.diameter
+        resultado.hidden = false
+      } catch (e) {
+        console.error(e)
+        mensaje.textContent = 'No se pudo consultar la API. Inténtalo de nuevo.'
+      }
+    }
+  </script>

@@ -1,0 +1,33 @@
+:root { --bg:#0e1424; --card:#18213a; --text:#e8ecf7; --muted:#8f9bbd; --accent:#ffc857; --err:#ff6b6b; }
+* { box-sizing:border-box; }
+[hidden] { display:none !important; }
+body { margin:0; min-height:100vh; display:grid; place-items:start center; padding:48px 16px;
+       background:var(--bg); color:var(--text); font-family:"Trebuchet MS","Segoe UI",sans-serif; }
+main { width:100%; max-width:460px; }
+h1 { font-size:1.7rem; margin:0 0 4px; }
+.sub { color:var(--muted); margin:0 0 24px; }
+
+.busqueda { display:flex; gap:8px; }
+.busqueda input { flex:1; padding:12px 14px; border-radius:10px; border:2px solid #2b3860;
+                  background:var(--card); color:var(--text); font-size:1rem; }
+button { padding:12px 20px; border:0; border-radius:10px; background:var(--accent); color:#10131f;
+         font-weight:700; font-size:1rem; cursor:pointer; }
+button:hover { filter:brightness(1.1); }
+input:focus-visible, button:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+
+#mensaje { margin:24px 0 0; padding:14px; border-radius:10px; color:var(--err); background:#2a1820; }
+#mensaje:empty { display:none; }
+
+.resultado { margin-top:24px; background:var(--card); border-radius:14px; padding:20px;
+             border-left:5px solid var(--accent); }
+.resultado > div { margin-top:12px; }
+.resultado > div:first-of-type { margin-top:0; }
+label { display:block; color:var(--muted); font-size:.85rem; margin-bottom:2px; }
+.resultado input, .resultado textarea { width:100%; padding:0; border:0; background:transparent;
+             color:var(--text); font:inherit; font-size:1.05rem; text-transform:capitalize; }
+.resultado textarea { min-height:140px; resize:none; text-transform:none; line-height:1.5; }
+#nombre { font-size:1.4rem; font-weight:700; color:var(--accent); }
+.resultado img { display:block; max-width:100%; max-height:300px; margin:0 auto 16px; border-radius:10px; }
+
+.dragonball .resultado img { max-height:200px; }
+.dragonball .resultado textarea { min-height:280px; font-size:1.15rem; line-height:1.6; }
